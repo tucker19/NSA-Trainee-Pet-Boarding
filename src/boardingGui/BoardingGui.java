@@ -1,5 +1,6 @@
 package boardingGui;
 
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,9 +9,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
-import java.awt.CardLayout;
+import javax.swing.SwingConstants;
+
 import javax.swing.JTable;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -28,6 +28,7 @@ public class BoardingGui {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					BoardingGui window = new BoardingGui();
@@ -55,7 +56,7 @@ public class BoardingGui {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		frame.getContentPane().add(tabbedPane);
 		
 		JPanel patientLookup = new JPanel();
@@ -76,34 +77,34 @@ public class BoardingGui {
 		gl_patientLookup.setHorizontalGroup(
 			gl_patientLookup.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_patientLookup.createSequentialGroup()
-					.addGroup(gl_patientLookup.createParallelGroup(Alignment.TRAILING)
-						.addComponent(table, GroupLayout.PREFERRED_SIZE, 320, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_patientLookup.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_patientLookup.createSequentialGroup()
 							.addComponent(lblNewLabel)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
-							.addComponent(label, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)))
-					.addGap(6)
-					.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(104, Short.MAX_VALUE))
+							.addComponent(label, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+							.addGap(6)
+							.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, gl_patientLookup.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(table, GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)))
+					.addContainerGap())
 		);
 		gl_patientLookup.setVerticalGroup(
 			gl_patientLookup.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_patientLookup.createSequentialGroup()
 					.addGroup(gl_patientLookup.createParallelGroup(Alignment.LEADING)
 						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_patientLookup.createParallelGroup(Alignment.BASELINE)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblNewLabel))
 						.addGroup(gl_patientLookup.createSequentialGroup()
-							.addGroup(gl_patientLookup.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_patientLookup.createParallelGroup(Alignment.BASELINE)
-									.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(lblNewLabel))
-								.addGroup(gl_patientLookup.createSequentialGroup()
-									.addGap(6)
-									.addComponent(label)))
-							.addGap(41)
-							.addComponent(table, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(199, Short.MAX_VALUE))
+							.addGap(6)
+							.addComponent(label)))
+					.addGap(12)
+					.addComponent(table, GroupLayout.PREFERRED_SIZE, 248, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(114, Short.MAX_VALUE))
 		);
 		patientLookup.setLayout(gl_patientLookup);
 		
