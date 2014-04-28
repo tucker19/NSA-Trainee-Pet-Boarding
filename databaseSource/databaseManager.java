@@ -61,7 +61,21 @@ public class databaseManager {
 				calendar.setTime(da);
 				int hours = calendar.get(Calendar.HOUR_OF_DAY);
 				int minutes = calendar.get(Calendar.MINUTE);
-				System.out.println("Hours and mins are " + hours + " : " + minutes);
+				//System.out.println("Hours and mins are " + hours + " : " + minutes);
+			}
+			calStart.set(Calendar.MONTH, 4); // month adds 1 with this method, 0 is January
+			calStart.set(Calendar.YEAR, 2014);
+			calStart.set(Calendar.DAY_OF_MONTH, 7);
+			java.util.Date sd = calStart.getTime();
+			calStart.set(Calendar.MONTH, 4); // month adds 1 with this method, 0 is January
+			calStart.set(Calendar.YEAR, 2014);
+			calStart.set(Calendar.DAY_OF_MONTH, 11);
+			java.util.Date ed = calStart.getTime();
+			
+			//addBoarding("Matt", "Eric", "Groves", 160, sd, ed);
+			boarding[] b = getBoardings();
+			for (boarding r: b) {
+				System.out.println("Boarding pet: " + r.petName + " on date " + r.startDate + " until " + r.endDate);
 			}
 		
 		} else {
@@ -286,5 +300,90 @@ public class databaseManager {
 		}  
 	}
 	
+	
+	
+	public static boarding[] getBoardings() {
+		Statement stat = null;
+		ResultSet result = null;
+		int boardingSize = 0;
+		try {
+			stat = conn.createStatement();
+			result = stat.executeQuery("SELECT COUNT(*) FROM BOARDINGS");
+			if(result.next()) 
+				boardingSize = result.getInt(1); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		boarding[] boards = new boarding[boardingSize];
+		
+		try {
+			stat = conn.createStatement();
+			result = stat.executeQuery("SELECT * FROM BOARDINGS");
+			int count = 0; 
+			while (result.next()) {
+				String petName = result.getString("Pet_Name");
+				String ownerFirstName = result.getString("Owner_First_Name");
+				String ownerLastName = result.getString("Owner_Last_Name");
+				int weight = result.getInt("Pet_Weight");
+				
+				DateFormat formatter ;
+				java.util.Date startDate = null;
+				formatter = new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					startDate = (java.util.Date) formatter.parse(result.getString("Start_Date"));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				DateFormat formatter2 ;
+				java.util.Date endDate = null;
+				formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					endDate = (java.util.Date) formatter2.parse(result.getString("End_Date"));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				
+				
+				boarding b = new boarding(petName, ownerFirstName, ownerLastName, weight, startDate, endDate);
+				boards[count] = b;
+				count++;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return boards;
+	}
+	
+	public static void addBoarding(String pn, String ofn, String oln, int pw, java.util.Date sd, java.util.Date ed) {
+		try {
+			PreparedStatement pst = conn.prepareStatement("insert into BOARDINGS(Pet_Name, Owner_First_Name, Owner_Last_Name, Pet_Weight, Start_Date, End_Date) values(?,?,?,?,?,?)");
+			pst.setString(1, pn);
+			pst.setString(2, ofn);
+			pst.setString(3, oln);
+			pst.setInt(4, pw);
+			Calendar calendar=Calendar.getInstance();
+			calendar.setTime(sd);
+			java.text.SimpleDateFormat sdf = 
+				     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+			String startTime = sdf.format(sd);
+			pst.setString(5, startTime);
+			Calendar calendar2=Calendar.getInstance();
+			calendar.setTime(ed);
+			java.text.SimpleDateFormat sdf2 = 
+				     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+			String endTime = sdf2.format(ed);
+			pst.setString(6, endTime);
+			pst.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	}
 	
 }
