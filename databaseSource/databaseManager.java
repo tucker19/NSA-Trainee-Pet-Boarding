@@ -1,4 +1,9 @@
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class databaseManager {
 	public static Connection conn = null;
@@ -41,6 +46,24 @@ public class databaseManager {
 			for (ownerRecord r: o) {
 				System.out.println("OwnerFirstName is " + r.firstName + " Address is " + r.contactAddress);
 			}
+			Calendar calStart = new GregorianCalendar();
+			calStart.set(Calendar.MONTH, 0);
+			calStart.set(Calendar.YEAR, 2014);
+			calStart.set(Calendar.DAY_OF_MONTH, 5);
+			java.util.Date d = calStart.getTime();
+			appointment[] a = getAppointments();
+			//addAppointment("Max", "Eric", "Groves", d, "05", "30", "Patient Room 1", "Shots");
+			for (appointment r: a) {
+				//This is the process to get the Hours and Minutes back from an appointment
+				System.out.println("OwnerFirstName is " + r.ownerFirstName + " Date is " + r.appointmentDate);
+				java.util.Date da = (java.util.Date) r.appointmentDate;
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(da);
+				int hours = calendar.get(Calendar.HOUR_OF_DAY);
+				int minutes = calendar.get(Calendar.MINUTE);
+				System.out.println("Hours and mins are " + hours + " : " + minutes);
+			}
+		
 		} else {
 			System.out.println("Failed to make connection!");
 		}
@@ -184,5 +207,84 @@ public class databaseManager {
 			e.printStackTrace();
 		} 
 	}
+	
+	
+	
+	public static appointment[] getAppointments() {
+		Statement stat = null;
+		ResultSet result = null;
+		int appointmentSize = 0;
+		try {
+			stat = conn.createStatement();
+			result = stat.executeQuery("SELECT COUNT(*) FROM APPOINTMENTS");
+			if(result.next()) 
+				appointmentSize = result.getInt(1); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		appointment[] apps = new appointment[appointmentSize];
+		
+		try {
+			stat = conn.createStatement();
+			result = stat.executeQuery("SELECT * FROM APPOINTMENTS");
+			int count = 0; 
+			while (result.next()) {
+				String petName = result.getString("Pet_Name");
+				String ownerFirstName = result.getString("Owner_First_Name");
+				String ownerLastName = result.getString("Owner_Last_Name");
+				String room = result.getString("Room");
+				//String d = result.getString("Date_Time");
+				
+				DateFormat formatter ;
+				java.util.Date date = null;
+				formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+				try {
+					date = (java.util.Date) formatter.parse(result.getString("Date_Time"));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				
+				String reason = result.getString("Reason");
+
+				appointment a = new appointment(petName, ownerFirstName, ownerLastName, date, room, reason);
+				apps[count] = a;
+				count++;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return apps;
+	}
+	
+	
+	public static void addAppointment(String pn, String ofn, String oln, java.util.Date d, String h, String m, String ro, String re) {
+		try {
+			PreparedStatement pst = conn.prepareStatement("insert into APPOINTMENTS(Pet_Name, Owner_First_Name, Owner_Last_Name, Room, Date_Time, Reason) values(?,?,?,?,?,?)");
+			pst.setString(1, pn);
+			pst.setString(2, ofn);
+			pst.setString(3, oln);
+			pst.setString(4, ro);
+			Calendar calendar=Calendar.getInstance();
+			calendar.setTime(d);
+			calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h));
+			calendar.set(Calendar.MINUTE, Integer.parseInt(m));
+			calendar.set(Calendar.SECOND, 0);
+			java.util.Date date = calendar.getTime();
+			java.text.SimpleDateFormat sdf = 
+				     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+			String currentTime = sdf.format(date);
+			pst.setString(5, currentTime);
+			pst.setString(6, re);
+			pst.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	}
+	
 	
 }
