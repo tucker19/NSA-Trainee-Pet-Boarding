@@ -1,14 +1,15 @@
 
 public class ownerRecord {
-	String name;
+	String firstName, lastName;
 	String contactAddress, contactCity, contactState, contactZip;
 	String billingAddress, billingCity, billingState, billingZip;
 	String cellPhone, homePhone, workPhone;
 	
-	public ownerRecord(String na, String ca, String cc, String cs, String cz, 
+	public ownerRecord(String fn, String ln, String ca, String cc, String cs, String cz, 
 			String ba, String bc, String bs, String bz, String cp, String hp, String wp) {
 		
-		name = na;
+		firstName = fn;
+		lastName = ln;
 		contactAddress = ca;
 		contactCity = cc;
 		contactState = cs;
