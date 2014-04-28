@@ -1,10 +1,11 @@
 
 public class petRecord {
-	public String ownerName, petName, catDog, sex, breed, color, dob, perscriptions, immunizations;
+	public String ownerFirstName, ownerLastName, petName, catDog, sex, breed, color, dob, perscriptions, immunizations;
 	int weight;
 	
-	public petRecord(String o, String pn, String cd, String s, String br, int w, String co, String d, String p, String i) {
-		ownerName = o;
+	public petRecord(String ofn, String oln, String pn, String cd, String s, String br, int w, String co, String d, String p, String i) {
+		ownerFirstName = ofn;
+		ownerLastName = oln;
 		petName = pn;
 		catDog = cd;
 		sex = s;

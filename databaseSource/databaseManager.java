@@ -31,9 +31,10 @@ public class databaseManager {
 		if (conn != null) {
 			System.out.println("You made it, take control your database now!");
 			System.out.println("Getting pets");
+			addPetRecord("Matthew",  "Jahnke", "Archer2", "Dog", "M", "Something", 15, "Black", "04-01-2014", "Allofem" , "ALLOFEM" );
 			petRecord[] p = getPetRecords();
 			for (petRecord r: p) {
-				System.out.println("OwnerName is " + r.ownerName + " PetName is " + r.petName);
+				System.out.println("OwnerFirstName is " + r.ownerFirstName + " PetName is " + r.petName);
 			}
 		} else {
 			System.out.println("Failed to make connection!");
@@ -42,6 +43,19 @@ public class databaseManager {
 		
 	}
 	
+	public static void addPetRecord(String ofn, String oln, String pn, String cd, String s, String br, int w, String co, String d, String p, String i) {
+		Statement stmt;
+		try {
+			stmt = conn.createStatement ();
+			String sql = "INSERT INTO PET_RECORDS " +
+	                   "VALUES ('Mattttt', 'JAH-NKE', 'TheDOG', 'Dog', 'M', 'Lab', 115, 'Black', '04-21-14', 'ALL DEM', 'SO IMMUNE')";
+	      stmt.executeUpdate(sql);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	}
 	
 	public static petRecord[] getPetRecords() {
 		Statement stat = null;
@@ -63,7 +77,8 @@ public class databaseManager {
 			result = stat.executeQuery("SELECT * FROM PET_RECORDS");
 			int count = 0; 
 			while (result.next()) {
-				String ownerName = result.getString("Owner_Name");
+				String ownerFirstName = result.getString("Owner_First_Name");
+				String ownerLastName = result.getString("Owner_Last_Name");
 				String petName = result.getString("Pet_Name");
 				String catDog = result.getString("Cat_Dog");
 				String sex = result.getString("Sex");
@@ -73,7 +88,7 @@ public class databaseManager {
 				String dob = result.getString("Dob");
 				String perscriptions = result.getString("Perscriptions");
 				String immunizations = result.getString("Immunizations");
-				petRecord p = new petRecord(ownerName, petName, catDog, sex, breed, weight, color, dob, perscriptions, immunizations);
+				petRecord p = new petRecord(ownerFirstName, ownerLastName, petName, catDog, sex, breed, weight, color, dob, perscriptions, immunizations);
 				pets[count] = p;
 				count++;
 				//System.out.println(petName);
